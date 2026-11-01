@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>CHIMERALLY — M0 試作</title>
-  <script type="module" crossorigin src="/chimerally-demo/assets/main-Bfij3FSB.js"></script>
-  <link rel="modulepreload" crossorigin href="/chimerally-demo/assets/src-DVoHS9sa.js">
-  <link rel="stylesheet" crossorigin href="/chimerally-demo/assets/src-kv0R8_WR.css">
+  <script type="module" crossorigin src="/chimerally-demo/assets/main-CPJXO1W9.js"></script>
+  <link rel="modulepreload" crossorigin href="/chimerally-demo/assets/src-C25jh6XH.js">
+  <link rel="stylesheet" crossorigin href="/chimerally-demo/assets/src-C64HkTXc.css">
 </head>
 <body>
 <div id="app">
@@ -17,6 +17,9 @@
       <span>♥ <b id="life">10</b></span>
       <span>勝 <b id="wins">0</b>/7</span>
       <span>G <b id="gold">10</b></span>
+      <span class="leader" id="leader"></span>
+      <button type="button" id="replay">コードで再生</button>
+      <button type="button" id="codex">図鑑 <b id="codex-count">0/34</b></button>
       <span class="muted" id="seed"></span>
       <span class="tools"><button type="button" id="export">JSON 保存</button><button type="button" id="import">読み込み</button><input type="file" id="import-file" accept="application/json" hidden></span>
     </div>
@@ -69,6 +72,7 @@
   </div>
   <div id="rebuild-bar" class="rebuild-bar" hidden><span id="rebuild-msg"></span><span><button type="button" id="rebuild-commit" class="primary">確定</button><button type="button" id="rebuild-cancel">キャンセル</button></span></div>
   <div id="market" class="modal" hidden></div>
+  <div id="codex-modal" class="modal" hidden></div>
 </div>
 </body>
 </html>
