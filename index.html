@@ -3,106 +3,78 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>CHIMERALLY — M0 試作</title>
-  <script type="module" crossorigin src="/chimerally-demo/assets/main-D69aRqmy.js"></script>
-  <link rel="modulepreload" crossorigin href="/chimerally-demo/assets/src-Dm0ua89i.js">
-  <link rel="stylesheet" crossorigin href="/chimerally-demo/assets/src-CwZXpJ2u.css">
+<meta name="theme-color" content="#101719">
+<title>CHIMERALLY</title>
+  <script type="module" crossorigin src="/chimerally-demo/assets/main-BZjOZ6MK.js"></script>
+  <link rel="modulepreload" crossorigin href="/chimerally-demo/assets/scene-art-OW3tAzWx.js">
+  <link rel="stylesheet" crossorigin href="/chimerally-demo/assets/main-nsLhvNbj.css">
 </head>
 <body>
 <div id="app">
   <header class="top">
-    <div class="brand">CHIMERALLY <span class="muted">M0 試作（図形のみ）</span></div>
-    <div class="status">
-      <span>ROUND <b id="round">1</b></span>
-      <span>♥ <b id="life">10</b></span>
-      <span>勝 <b id="wins">0</b>/7</span>
-      <span>G <b id="gold">10</b> <small class="muted" id="interest"></small></span>
-      <span class="leader" id="leader"></span>
-      <button type="button" id="replay">コードで再生</button>
-      <button type="button" id="codex">図鑑 <b id="codex-count">0</b></button>
-      <span class="muted" id="seed"></span>
-      <span class="tools"><button type="button" id="export">JSON 保存</button><button type="button" id="import">読み込み</button><input type="file" id="import-file" accept="application/json" hidden></span>
-    </div>
+    <div class="brand-lockup"><div class="brand"><span class="brand-mark" aria-hidden="true">◇</span> CHIMERALLY</div><span id="phase-label" class="phase-label">庭をつくる</span></div>
+    <section class="status" aria-label="ランの状況">
+      <div class="hud-stat"><span class="hud-label">ROUND</span><b id="round">1</b></div>
+      <div class="hud-stat life-stat"><span class="hud-label">LIFE</span><b><span aria-hidden="true">♥</span> <span id="life">10</span></b></div>
+      <div class="hud-stat wins-stat"><span class="hud-label">VICTORY</span><b><span id="wins">0</span><small> / 7</small></b><div class="run-track" aria-hidden="true"><span id="round-progress"></span></div></div>
+      <div class="hud-stat gold-stat"><span class="hud-label">GOLD</span><b><span id="gold">10</span><small> G</small></b><small id="interest" class="interest"></small></div>
+    </section>
+    <details id="game-menu" class="game-menu">
+      <summary>メニュー <span aria-hidden="true">☰</span></summary>
+      <div class="menu-content">
+        <p class="eyebrow">YOUR LEADER</p><strong class="leader" id="leader"></strong><p id="leader-rule" class="leader-rule" hidden></p>
+        <button type="button" id="codex">融合図鑑 <b id="codex-count">0</b></button>
+        <button type="button" id="replay">コードで再生</button>
+        <button type="button" id="sound-toggle" aria-pressed="false">効果音：オフ</button>
+        <div class="growth-record"><span class="eyebrow">このランの成長</span><p id="growth-milestones">初合成 — / 初融合 —</p></div>
+        <div class="tools"><button type="button" id="export">JSON 保存</button><button type="button" id="import">読み込み</button><input type="file" id="import-file" accept="application/json" hidden></div>
+        <span class="muted" id="seed"></span>
+      </div>
+    </details>
   </header>
-  <p id="leader-rule" class="leader-rule" hidden></p>
   <main class="layout">
-    <section class="board-wrap">
-      <div class="panel-head">
-        <span>自分の庭 <b id="area">9</b>/21 マス</span>
-        <span class="hint" id="hint">ショップのカードを選んで、庭のマスをクリック。R で回転、F で反転。</span>
-      </div>
-      <canvas id="board" data-drop-target="board" width="700" height="500"></canvas>
-      <p class="hint drag-help">カードはドラッグでも移動できます。スマホは「⠿ 移動」をつかみ、画面端でスクロール。タップしてから配置もできます。</p>
-      <div id="selection-detail" class="selection-detail" hidden>
-        <canvas id="selection-preview" width="160" height="100" aria-label="選択中の形と支援口"></canvas>
-        <div><strong id="selection-name"></strong><div id="selection-orientation" class="hint"></div><div id="selection-help" class="hint"></div></div>
-      </div>
-      <div class="board-tools">
-        <button type="button" id="rotate" disabled>↻ 右に90°回転 · R</button>
-        <button type="button" id="flip" disabled>↔ 左右反転 · F</button>
-        <button type="button" id="clear-selection" disabled>✕ 選択を解除 · Esc</button>
-      </div>
-      <p id="wire-note" class="hint wire-note" hidden></p>
-      <p id="land-preview-note" class="hint" hidden>土地拡張カードを買うと、点線の3マスが増えます。</p>
-      <div id="bench-drop" class="bench" data-drop-target="bench">
-        <span class="label">控え</span>
-        <div id="bench"></div>
-      </div>
+    <section class="board-wrap" aria-label="庭と控え">
+      <div class="panel-head garden-head"><div><span class="eyebrow">YOUR GARDEN</span><h1>自分の庭</h1></div><span class="area-label"><b id="area">9</b> / 21 <small>マス</small></span><p id="land-preview-note" class="hint" hidden>点線の3マスを次に拡張</p></div>
+      <div class="board-stage"><canvas id="board" data-drop-target="board" width="700" height="500" aria-label="庭の配置盤面"></canvas></div>
+      <div class="board-guidance"><div class="board-messages"><span class="hint" id="hint">カードを選んで、庭へ置きましょう。</span><p id="wire-note" class="hint wire-note" hidden></p></div><details class="control-help"><summary aria-label="操作ガイド">?</summary><p class="drag-help">カードを選んで庭をタップ、またはドラッグで配置。Rで右回転・Fで左右反転・Escで解除。スマホでは「⠿ 移動」をつかみます。</p></details></div>
+      <div id="bench-drop" class="bench" data-drop-target="bench"><div class="bench-label"><span class="label">控え</span><small><b id="bench-count">0</b> / 6</small></div><div id="bench"></div></div>
     </section>
     <aside class="side">
-      <div class="panel">
-        <div class="panel-head"><span>次の相手</span><span class="muted" id="rival-name"></span></div>
-        <div class="muted rival-hidden">編成は戦闘が始まると見えます</div>
-      </div>
-      <div class="panel actions">
-        <button type="button" id="deploy" class="primary">出撃する</button>
-        <button type="button" id="next" class="primary" hidden>次のラウンドへ</button>
-        <button type="button" id="restart" hidden>新しいラン</button>
-      </div>
-      <div class="panel" id="result" hidden></div>
+      <section class="workshop panel" aria-label="カードの操作と育成">
+        <div class="workshop-tabs" role="tablist" aria-label="カードの操作">
+          <button type="button" id="tab-inspect" role="tab" aria-selected="true" aria-controls="workshop-inspect" data-workshop-tab="inspect">操作</button>
+          <button type="button" id="tab-merge" role="tab" aria-selected="false" aria-controls="workshop-merge" data-workshop-tab="merge">同名合成 <span id="merge-count" class="tab-count">0</span></button>
+          <button type="button" id="tab-fusion" role="tab" aria-selected="false" aria-controls="workshop-fusion" data-workshop-tab="fusion">融合 <span id="fusion-count" class="tab-count">0</span></button>
+        </div>
+        <section id="workshop-inspect" class="workshop-panel" role="tabpanel" aria-labelledby="tab-inspect" data-workshop-panel="inspect">
+          <div id="selection-empty" class="selection-empty"><span aria-hidden="true">⌖</span><strong>カードを選ぶ</strong><p>庭・控え・ショップのカードを選ぶと、形や向きを確認できます。</p></div>
+          <div id="selection-detail" class="selection-detail" hidden>
+            <canvas id="selection-preview" width="160" height="100" aria-label="選択中の形と支援口"></canvas>
+            <div class="selection-copy"><strong id="selection-name"></strong><div id="selection-orientation" class="hint"></div><div id="selection-tags" class="tags"></div><p id="selection-description"></p><div id="selection-help" class="hint"></div></div>
+          </div>
+          <div class="board-tools"><button type="button" id="rotate" disabled><span aria-hidden="true">↻</span> 右に90°回転 <kbd>R</kbd></button><button type="button" id="flip" disabled><span aria-hidden="true">↔</span> 左右反転 <kbd>F</kbd></button><button type="button" id="clear-selection" disabled><span aria-hidden="true">✕</span> 選択を解除 <kbd>Esc</kbd></button></div>
+          <div class="unit-actions"><button type="button" id="bench-btn" disabled>控えへ</button><button type="button" id="sell" disabled>売却</button></div>
+        </section>
+        <section id="workshop-merge" class="workshop-panel" role="tabpanel" aria-labelledby="tab-merge" data-workshop-panel="merge" hidden><div class="panel-head"><span id="merge-heading">同名合成</span></div><p class="hint workshop-intro">同名・同★の3枚をまとめて、次の★へ。</p><div id="merge-options"></div></section>
+        <section id="workshop-fusion" class="workshop-panel" role="tabpanel" aria-labelledby="tab-fusion" data-workshop-panel="fusion" hidden><div class="panel-head"><span id="fusion-heading">融合</span></div><p class="hint workshop-intro">同じ★の2体から、新しい役割の巣へ。</p><div id="fusion-options"></div></section>
+      </section>
+      <section class="actions panel" aria-label="出撃"><div class="rival"><span class="eyebrow">NEXT OPPONENT</span><strong id="rival-name"></strong><small class="rival-hidden">敵の編成は戦闘開始後に公開</small></div><button type="button" id="deploy" class="primary">出撃する <span aria-hidden="true">↗</span></button></section>
     </aside>
+    <section class="shop" aria-label="ショップと練習"><div class="panel-head shop-head" id="shop-heading"><div><span class="eyebrow">SUPPLY</span><h2>ショップ</h2></div><button type="button" id="reroll">↻ 更新 <b id="reroll-price">無料</b></button></div><div id="shop" class="cards"></div><section id="practice-banner" class="practice-banner" aria-label="練習の操作" hidden><div><span class="eyebrow">PRACTICE</span><h2>配置を変えて、もう一度。</h2><p>直前の手持ちと同じ相手で練習します。庭・控えの移動と回転・反転だけを変更できます。</p><p class="hint">実戦の勝敗・所持金・セーブは変わりません。</p></div><div class="practice-tools"><button type="button" id="practice-reset">実戦の配置に戻す</button><button type="button" id="practice-exit">実戦結果へ戻る</button></div></section></section>
   </main>
-  <section class="shop">
-    <div class="panel-head">
-      <span>ショップ</span>
-      <span>
-        <button type="button" id="reroll">更新 <b id="reroll-price">無料</b></button>
-        <button type="button" id="sell" disabled>売却</button>
-        <button type="button" id="bench-btn" disabled>控えへ</button>
-      </span>
-    </div>
-    <div id="shop" class="cards"></div>
-  </section>
-  <section class="panel fusion-panel" aria-labelledby="merge-heading">
-    <div class="panel-head"><span id="merge-heading">同名合成</span><span class="hint">同名・同★の3枚をまとめて、次の★へ育てます。</span></div>
-    <div id="merge-options"></div>
-  </section>
-  <section class="panel fusion-panel" aria-labelledby="fusion-heading">
-    <div class="panel-head"><span id="fusion-heading">融合</span><span class="hint">同じ★の2体を組み合わせます。完成した巣も同じ★です。</span></div>
-    <div id="fusion-options"></div>
-  </section>
-  <div id="battle" class="battle" hidden>
-    <canvas id="arena" width="1440" height="580"></canvas>
-    <div class="battle-bar">
-      <span id="battle-time">0.0 秒</span>
-      <span id="battle-bases"></span>
-      <button type="button" id="speed">2倍 → 4倍</button>
-      <button type="button" id="skip">スキップ</button>
-    </div>
+  <div id="battle" class="battle" role="dialog" aria-modal="true" aria-label="戦闘" hidden>
+    <header class="battle-heading"><div><span class="eyebrow">BATTLE</span><h2 id="battle-title">戦闘</h2></div><span id="battle-time">0.0 秒</span></header>
+    <div class="battle-vitals"><div class="army-vital mine"><div><span>自分の本陣</span><b id="battle-mine-hp">500</b></div><div class="hp-track"><span id="battle-mine-fill"></span></div></div><span class="battle-versus">VS</span><div class="army-vital foe"><div><span>相手の本陣</span><b id="battle-foe-hp">500</b></div><div class="hp-track"><span id="battle-foe-fill"></span></div></div></div>
+    <div class="arena-stage"><canvas id="arena" width="1440" height="580"></canvas></div>
+    <div id="battle-event" class="battle-event" role="status"></div>
+    <div class="battle-bar"><span id="battle-bases" class="muted"></span><div><button type="button" id="speed">2倍 → 4倍</button><button type="button" id="skip">結果へ進む ↗</button></div></div>
   </div>
-  <div id="market" class="modal" hidden></div>
+  <div id="result-screen" class="modal" role="dialog" aria-modal="true" aria-label="戦闘結果" hidden><div class="box result-box"><div id="result" hidden></div><footer class="result-actions"><button type="button" id="practice" hidden>配置を変えて試す</button><button type="button" id="practice-again" class="primary" hidden>配置を直す</button><button type="button" id="practice-leave" hidden>実戦結果へ戻る</button><button type="button" id="next" class="primary" hidden>次のラウンドへ ↗</button><button type="button" id="restart" class="primary" hidden>新しいラン</button></footer></div></div>
+  <div id="market" class="modal" role="dialog" aria-modal="true" aria-label="リーダーと仕入れ" hidden></div>
+  <div id="codex-modal" class="modal" role="dialog" aria-modal="true" aria-label="融合図鑑" hidden></div>
+  <div id="replay-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="replay-title" hidden><form id="replay-form" class="box"><span class="eyebrow">REPLAY</span><h3 id="replay-title">共有コードで再生</h3><label for="replay-code">共有コードまたは共有リンク</label><input id="replay-code" type="text" autocomplete="off" required><p id="replay-error" role="alert"></p><div class="dialog-actions"><button type="submit" class="primary">再生する</button><button id="replay-cancel" type="button">閉じる</button></div></form></div>
   <div id="drag-preview" class="drag-preview" aria-hidden="true" hidden></div>
-  <div id="codex-modal" class="modal" hidden></div>
-  <div id="replay-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="replay-title" hidden>
-    <form id="replay-form" class="box">
-      <h3 id="replay-title">共有コードで再生</h3>
-      <label for="replay-code">共有コードまたは共有リンク</label>
-      <input id="replay-code" type="text" autocomplete="off" required>
-      <p id="replay-error" role="alert"></p>
-      <button type="submit" class="primary">再生する</button>
-      <button id="replay-cancel" type="button">閉じる</button>
-    </form>
-  </div>
+  <div id="feedback" class="feedback" role="status" hidden></div>
 </div>
 </body>
 </html>

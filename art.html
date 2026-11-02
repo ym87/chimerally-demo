@@ -1,25 +1,42 @@
 <!doctype html>
 <html lang="ja">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>CHIMERALLY — 素材比較（16 / 24 / 32px）</title>
-<style>.art{gap:18px;display:grid}.res{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px}.res h2{margin:0 0 8px;font-size:16px}.res .row{grid-template-columns:1fr 1fr;gap:12px;display:grid}.res .row.wide{grid-template-columns:1fr}.res canvas{width:100%;height:auto;image-rendering:pixelated}.res .note{color:var(--muted);margin-top:4px;font-size:12px}.legend{color:var(--muted);margin:6px 0 14px;font-size:12px}code{background:#0b1511;border-radius:4px;padding:1px 5px}</style>
-  <script type="module" crossorigin src="/chimerally-demo/assets/art-BosyagLo.js"></script>
-  <link rel="modulepreload" crossorigin href="/chimerally-demo/assets/src-Dm0ua89i.js">
-  <link rel="stylesheet" crossorigin href="/chimerally-demo/assets/src-CwZXpJ2u.css">
-</head>
-<body>
-<div id="app">
-  <header class="top">
-    <div class="brand">CHIMERALLY <span class="muted">素材比較（M1）</span></div>
-    <div class="status"><a href="/" style="color:var(--mine)">← ゲームへ</a></div>
-  </header>
-  <p class="legend">
-    <code>packages/content/sprites/&lt;res&gt;/&lt;id&gt;/idle_00.png</code> を置くとここに出ます（透過 PNG・右向き）。
-    無いものは仮の図形（<code>_placeholder</code>）を表示。左＝盤面の縮尺（1 マス 100px）、右＝戦場の縮尺（部隊の半径 12〜17px）。味方色と敵色（色相シフト）を並べます。
-  </p>
-  <div id="art" class="art"></div>
-</div>
-</body>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>CHIMERALLY — Admurin 素材確認</title>
+    <style>:root{--lightningcss-light: ;--lightningcss-dark:initial;color-scheme:dark;color:#eef1df;background:#101a1d;font:15px/1.6 system-ui,sans-serif}*{box-sizing:border-box}body{margin:0}main{max-width:1320px;margin:auto;padding:32px}header{justify-content:space-between;align-items:center;gap:20px;display:flex}h1{margin:0;font-size:28px;line-height:1.3}h2,h3{margin:0;font-size:18px}p{margin:8px 0}a{color:#8de0c0}.eyebrow{color:#edc678;letter-spacing:.15em;font-size:11px}.muted,.note{color:#a2b8b4}.toolbar{background:#1b2b2d;border:1px solid #3b5553;border-radius:12px;flex-wrap:wrap;align-items:end;gap:16px;margin:24px 0 16px;padding:18px;display:flex}label{color:#a2b8b4;gap:5px;font-size:12px;display:grid}select,button{color:#eef1df;min-height:42px;font:inherit;cursor:pointer;background:#203b37;border:1px solid #52726a;border-radius:6px;padding:8px 14px}select:focus-visible,button:focus-visible,a:focus-visible,summary:focus-visible{outline-offset:3px;outline:3px solid #edc678}button[aria-pressed=true]{color:#101a1d;background:#edc678}#load-status{color:#8de0c0;margin-left:auto}.art-grid{grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:18px;display:grid}.sprite-card,.scene-card{background:#1b2b2d;border:1px solid #3b5553;border-radius:12px;min-width:0;overflow:hidden}.catalogue-section{border-top:1px solid #3b5553;margin-top:32px;padding-top:24px}.section-heading{flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px 18px;display:flex}.section-heading h2{font-size:23px}#scene-load-status{color:#8de0c0;font-size:13px}#scene-art-grid{margin-top:18px}.card-title{justify-content:space-between;align-items:baseline;gap:12px;padding:16px 18px 0;display:flex}.card-title span{color:#edc678;white-space:nowrap;font-size:12px}canvas{width:100%;height:auto;image-rendering:pixelated;display:block}.note{padding:0 18px 12px;font-size:12px}.empty{border:1px dashed #52726a;border-radius:12px;padding:30px}details{border:1px solid #3b5553;border-radius:10px;margin-top:24px;padding:16px 18px}summary{cursor:pointer}#unavailable-list{color:#a2b8b4;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:6px 24px;padding-left:20px;display:grid}@media (max-width:640px){main{padding:18px}h1{font-size:23px}header{align-items:start}.art-grid{grid-template-columns:1fr}#load-status{width:100%;margin-left:0}}</style>
+    <script type="module" crossorigin src="/chimerally-demo/assets/art-epQouzPr.js"></script>
+    <link rel="modulepreload" crossorigin href="/chimerally-demo/assets/scene-art-OW3tAzWx.js">
+  </head>
+  <body>
+    <main>
+      <header>
+        <div><p class="eyebrow">CHIMERALLY / ART PREVIEW</p><h1>Admurin 素材確認</h1></div>
+        <a href="./">← ゲームへ</a>
+      </header>
+      <p class="muted">同じ魔物を大きな表示と戦場の縮尺で確認できます。足元の色は味方・敵の目印です。</p>
+      <section id="scene-art" class="catalogue-section" aria-labelledby="scene-heading">
+        <div class="section-heading">
+          <h2 id="scene-heading">庭と施設</h2>
+          <p id="scene-load-status" role="status" aria-live="polite">素材を読み込み中…</p>
+        </div>
+        <p class="muted">画像生成で試作した施設4種と本陣です。草地にAdmurinの風ウサギを並べ、色と大きさを比べられます。</p>
+        <p class="muted">建物は直立した静止画を使い、占有マス・接続口・導線はゲーム側で重ねて描きます。</p>
+        <div id="scene-art-grid" class="art-grid"></div>
+      </section>
+      <h2 class="catalogue-section">魔物</h2>
+      <fieldset class="toolbar" aria-label="プレビュー操作">
+        <label>動作<select id="animation"><option value="idle">待機</option><option value="move">移動</option><option value="attack">攻撃</option></select></label>
+        <label>向き<select id="direction"><option value="right">右</option><option value="left">左</option><option value="up">上</option><option value="down">下</option></select></label>
+        <button id="pause" type="button" aria-pressed="false">一時停止</button>
+        <p id="load-status" role="status" aria-live="polite">素材を読み込み中…</p>
+      </fieldset>
+      <p class="muted">収録されていない動作は、利用できる動作で表示します。</p>
+      <div id="art" class="art-grid"></div>
+      <details id="unavailable">
+        <summary id="unavailable-summary">未割当・読み込み状況</summary>
+        <ul id="unavailable-list"></ul>
+      </details>
+    </main>
+  </body>
 </html>
