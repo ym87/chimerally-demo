@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#101719">
 <title>CHIMERALLY</title>
-  <script type="module" crossorigin src="/chimerally-demo/assets/main-VVANUBrM.js"></script>
-  <link rel="modulepreload" crossorigin href="/chimerally-demo/assets/scene-art-Cjb_pjOp.js">
-  <link rel="stylesheet" crossorigin href="/chimerally-demo/assets/main-ByHPphnu.css">
+  <script type="module" crossorigin src="/chimerally-demo/assets/main-gYnzRk7l.js"></script>
+  <link rel="modulepreload" crossorigin href="/chimerally-demo/assets/scene-art-DF-4pgcq.js">
+  <link rel="stylesheet" crossorigin href="/chimerally-demo/assets/main-CUKNjFWa.css">
 </head>
 <body>
 <div id="app">
@@ -34,8 +34,8 @@
   </header>
   <main class="layout">
     <section class="board-wrap" aria-label="庭と控え">
-      <div class="panel-head garden-head"><div><span class="eyebrow">YOUR GARDEN</span><h1>自分の庭</h1></div><span class="area-label"><b id="area">9</b> / 21 <small>マス</small></span><p id="land-preview-note" class="hint" hidden>点線の3マスを次に拡張</p></div>
-      <div class="board-stage"><canvas id="board" data-drop-target="board" width="700" height="500" aria-label="庭の配置盤面"></canvas></div>
+      <div class="panel-head garden-head"><div><span class="eyebrow">YOUR GARDEN</span><h1>自分の庭</h1></div><span class="area-label"><b id="area">8</b> / <span id="area-max">20</span> <small>マス</small></span><p id="land-preview-note" class="hint" hidden>点線の列を次に拡張（後ろに4マス）</p></div>
+      <div class="board-stage"><canvas id="board" data-drop-target="board" width="584" height="484" aria-label="庭の配置盤面"></canvas></div>
       <div class="board-guidance"><div class="board-messages"><span class="hint" id="hint">カードを選んで、庭へ置きましょう。</span><p id="reaction-note" class="hint reaction-note" hidden></p></div><details class="control-help"><summary aria-label="操作ガイド">?</summary><p class="drag-help">カードを選んで庭をタップ、またはドラッグで配置。Rで右回転・Fで左右反転・Escで解除。スマホでは「⠿ 移動」をつかみます。</p></details></div>
       <div id="bench-drop" class="bench" data-drop-target="bench"><div class="bench-label"><span class="label">控え</span><small><b id="bench-count">0</b> / 6</small></div><div id="bench"></div></div>
     </section>
@@ -47,13 +47,19 @@
           <button type="button" id="tab-fusion" role="tab" aria-selected="false" aria-controls="workshop-fusion" data-workshop-tab="fusion">融合 <span id="fusion-count" class="tab-count">0</span></button>
         </div>
         <section id="workshop-inspect" class="workshop-panel" role="tabpanel" aria-labelledby="tab-inspect" data-workshop-panel="inspect">
-          <div id="selection-empty" class="selection-empty"><span aria-hidden="true">⌖</span><strong>カードを選ぶ</strong><p>庭・控え・ショップのカードを選ぶと、形や向きを確認できます。</p></div>
-          <div id="selection-detail" class="selection-detail" hidden>
-            <canvas id="selection-preview" width="160" height="100" aria-label="選択中の形と支援口"></canvas>
-            <div class="selection-copy"><strong id="selection-name"></strong><div id="selection-orientation" class="hint"></div><div id="selection-tags" class="tags"></div><p id="selection-description"></p><div id="selection-help" class="hint"></div></div>
+          <!-- biome-ignore lint/a11y/noNoninteractiveTabindex: 内部スクロールを矢印キーやPageDownで操作できるよう、名前付きの領域にフォーカスを許可する。 -->
+          <section class="inspection-scroll" aria-label="選択カードと出撃位置" tabindex="0">
+            <div id="selection-empty" class="selection-empty"><span aria-hidden="true">⌖</span><strong>カードを選ぶ</strong><p>庭・控え・ショップのカードを選ぶと、形や向きを確認できます。</p></div>
+            <div id="selection-detail" class="selection-detail" hidden>
+              <canvas id="selection-preview" width="160" height="100" aria-label="選択中の形と支援口"></canvas>
+              <div class="selection-copy"><strong id="selection-name"></strong><div id="selection-orientation" class="hint"></div><div id="selection-tags" class="tags"></div><p id="selection-description"></p><div id="selection-help" class="hint"></div></div>
+            </div>
+            <div id="deployment-preview" hidden></div>
+          </section>
+          <div class="inspection-actions">
+            <div class="board-tools"><button type="button" id="rotate" disabled><span aria-hidden="true">↻</span> 右に90°回転 <kbd>R</kbd></button><button type="button" id="flip" disabled><span aria-hidden="true">↔</span> 左右反転 <kbd>F</kbd></button><button type="button" id="clear-selection" disabled><span aria-hidden="true">✕</span> 選択を解除 <kbd>Esc</kbd></button></div>
+            <div class="unit-actions"><button type="button" id="bench-btn" disabled>控えへ</button><button type="button" id="sell" disabled>売却</button></div>
           </div>
-          <div class="board-tools"><button type="button" id="rotate" disabled><span aria-hidden="true">↻</span> 右に90°回転 <kbd>R</kbd></button><button type="button" id="flip" disabled><span aria-hidden="true">↔</span> 左右反転 <kbd>F</kbd></button><button type="button" id="clear-selection" disabled><span aria-hidden="true">✕</span> 選択を解除 <kbd>Esc</kbd></button></div>
-          <div class="unit-actions"><button type="button" id="bench-btn" disabled>控えへ</button><button type="button" id="sell" disabled>売却</button></div>
         </section>
         <section id="workshop-merge" class="workshop-panel" role="tabpanel" aria-labelledby="tab-merge" data-workshop-panel="merge" hidden><div class="panel-head"><span id="merge-heading">同名合成</span></div><p class="hint workshop-intro">同名・同★の3枚をまとめて、次の★へ。</p><div id="merge-options"></div></section>
         <section id="workshop-fusion" class="workshop-panel" role="tabpanel" aria-labelledby="tab-fusion" data-workshop-panel="fusion" hidden><div class="panel-head"><span id="fusion-heading">融合</span></div><p class="hint workshop-intro">同じ★の2体から、新しい役割の巣へ。</p><div id="fusion-options"></div></section>
