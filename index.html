@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#101719">
 <title>CHIMERALLY</title>
-  <script type="module" crossorigin src="/chimerally-demo/assets/main-gYnzRk7l.js"></script>
-  <link rel="modulepreload" crossorigin href="/chimerally-demo/assets/scene-art-DF-4pgcq.js">
-  <link rel="stylesheet" crossorigin href="/chimerally-demo/assets/main-CUKNjFWa.css">
+  <script type="module" crossorigin src="/chimerally-demo/assets/main-C4APYrNh.js"></script>
+  <link rel="modulepreload" crossorigin href="/chimerally-demo/assets/scene-art-D0VbjVVJ.js">
+  <link rel="stylesheet" crossorigin href="/chimerally-demo/assets/main-Cbg9qbgJ.css">
 </head>
 <body>
 <div id="app">
@@ -23,7 +23,7 @@
       <summary>メニュー <span aria-hidden="true">☰</span></summary>
       <div class="menu-content">
         <p class="eyebrow">YOUR LEADER</p><strong class="leader" id="leader"></strong><p id="leader-rule" class="leader-rule" hidden></p>
-        <button type="button" id="codex">融合図鑑 <b id="codex-count">0</b></button>
+        <button type="button" id="codex">図鑑・カード一覧 <b id="codex-count">0</b></button>
         <button type="button" id="replay">コードで再生</button>
         <button type="button" id="sound-toggle" aria-pressed="false">効果音：オフ</button>
         <div class="growth-record"><span class="eyebrow">このランの成長</span><p id="growth-milestones">初合成 — / 初融合 —</p></div>
@@ -36,7 +36,7 @@
     <section class="board-wrap" aria-label="庭と控え">
       <div class="panel-head garden-head"><div><span class="eyebrow">YOUR GARDEN</span><h1>自分の庭</h1></div><span class="area-label"><b id="area">8</b> / <span id="area-max">20</span> <small>マス</small></span><p id="land-preview-note" class="hint" hidden>点線の列を次に拡張（後ろに4マス）</p></div>
       <div class="board-stage"><canvas id="board" data-drop-target="board" width="584" height="484" aria-label="庭の配置盤面"></canvas></div>
-      <div class="board-guidance"><div class="board-messages"><span class="hint" id="hint">カードを選んで、庭へ置きましょう。</span><p id="reaction-note" class="hint reaction-note" hidden></p></div><details class="control-help"><summary aria-label="操作ガイド">?</summary><p class="drag-help">カードを選んで庭をタップ、またはドラッグで配置。Rで右回転・Fで左右反転・Escで解除。スマホでは「⠿ 移動」をつかみます。</p></details></div>
+      <div class="board-guidance"><div class="board-messages"><span class="hint" id="hint">カードを選んで、庭へ置きましょう。</span><p id="reaction-note" class="hint reaction-note" hidden></p></div><details id="control-help" class="control-help"><summary aria-label="操作ガイド">?</summary><p class="drag-help">カードを選んで庭をタップ、またはドラッグで配置。Rで右回転・Fで左右反転・Escで解除。スマホでは「⠿ 移動」をつかみます。<button type="button" id="help-catalog" class="help-catalog">モンスター・施設・技の一覧（図鑑）を見る</button></p></details></div>
       <div id="bench-drop" class="bench" data-drop-target="bench"><div class="bench-label"><span class="label">控え</span><small><b id="bench-count">0</b> / 6</small></div><div id="bench"></div></div>
     </section>
     <aside class="side">
@@ -77,7 +77,7 @@
   </div>
   <div id="result-screen" class="modal" role="dialog" aria-modal="true" aria-label="戦闘結果" hidden><div class="box result-box"><div id="result" hidden></div><footer class="result-actions"><button type="button" id="practice" hidden>配置を変えて試す</button><button type="button" id="practice-again" class="primary" hidden>配置を直す</button><button type="button" id="practice-leave" hidden>実戦結果へ戻る</button><button type="button" id="next" class="primary" hidden>次のラウンドへ ↗</button><button type="button" id="restart" class="primary" hidden>新しいラン</button></footer></div></div>
   <div id="market" class="modal" role="dialog" aria-modal="true" aria-label="リーダーと仕入れ" hidden></div>
-  <div id="codex-modal" class="modal" role="dialog" aria-modal="true" aria-label="融合図鑑" hidden></div>
+  <div id="codex-modal" class="modal" role="dialog" aria-modal="true" aria-label="図鑑・カード一覧" hidden></div>
   <div id="replay-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="replay-title" hidden><form id="replay-form" class="box"><span class="eyebrow">REPLAY</span><h3 id="replay-title">共有コードで再生</h3><label for="replay-code">共有コードまたは共有リンク</label><input id="replay-code" type="text" autocomplete="off" required><p id="replay-error" role="alert"></p><div class="dialog-actions"><button type="submit" class="primary">再生する</button><button id="replay-cancel" type="button">閉じる</button></div></form></div>
   <div id="drag-preview" class="drag-preview" aria-hidden="true" hidden></div>
   <div id="feedback" class="feedback" role="status" hidden></div>
