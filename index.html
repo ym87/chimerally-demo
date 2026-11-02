@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>CHIMERALLY — M0 試作</title>
-  <script type="module" crossorigin src="/chimerally-demo/assets/main-CGboTuBm.js"></script>
-  <link rel="modulepreload" crossorigin href="/chimerally-demo/assets/src-B3XN3IUP.js">
-  <link rel="stylesheet" crossorigin href="/chimerally-demo/assets/src-CaEyRFby.css">
+<title>CHIMERALLY — M0 試作</title>
+  <script type="module" crossorigin src="/chimerally-demo/assets/main-CdgBY78F.js"></script>
+  <link rel="modulepreload" crossorigin href="/chimerally-demo/assets/src-BrEhgX7O.js">
+  <link rel="stylesheet" crossorigin href="/chimerally-demo/assets/src-CwZXpJ2u.css">
 </head>
 <body>
 <div id="app">
@@ -19,19 +19,32 @@
       <span>G <b id="gold">10</b> <small class="muted" id="interest"></small></span>
       <span class="leader" id="leader"></span>
       <button type="button" id="replay">コードで再生</button>
-      <button type="button" id="codex">図鑑 <b id="codex-count">0/34</b></button>
+      <button type="button" id="codex">図鑑 <b id="codex-count">0</b></button>
       <span class="muted" id="seed"></span>
       <span class="tools"><button type="button" id="export">JSON 保存</button><button type="button" id="import">読み込み</button><input type="file" id="import-file" accept="application/json" hidden></span>
     </div>
   </header>
+  <p id="leader-rule" class="leader-rule" hidden></p>
   <main class="layout">
     <section class="board-wrap">
       <div class="panel-head">
         <span>自分の庭 <b id="area">9</b>/21 マス</span>
         <span class="hint" id="hint">ショップのカードを選んで、庭のマスをクリック。R で回転、F で反転。</span>
       </div>
-      <canvas id="board" width="700" height="500"></canvas>
-      <div class="bench">
+      <canvas id="board" data-drop-target="board" width="700" height="500"></canvas>
+      <p class="hint drag-help">カードはドラッグでも移動できます。スマホは「⠿ 移動」をつかみ、画面端でスクロール。タップしてから配置もできます。</p>
+      <div id="selection-detail" class="selection-detail" hidden>
+        <canvas id="selection-preview" width="160" height="100" aria-label="選択中の形と支援口"></canvas>
+        <div><strong id="selection-name"></strong><div id="selection-orientation" class="hint"></div><div id="selection-help" class="hint"></div></div>
+      </div>
+      <div class="board-tools">
+        <button type="button" id="rotate" disabled>↻ 右に90°回転 · R</button>
+        <button type="button" id="flip" disabled>↔ 左右反転 · F</button>
+        <button type="button" id="clear-selection" disabled>✕ 選択を解除 · Esc</button>
+      </div>
+      <p id="wire-note" class="hint wire-note" hidden></p>
+      <p id="land-preview-note" class="hint" hidden>土地拡張カードを買うと、点線の3マスが増えます。</p>
+      <div id="bench-drop" class="bench" data-drop-target="bench">
         <span class="label">控え</span>
         <div id="bench"></div>
       </div>
@@ -56,10 +69,17 @@
         <button type="button" id="reroll">更新 <b id="reroll-price">無料</b></button>
         <button type="button" id="sell" disabled>売却</button>
         <button type="button" id="bench-btn" disabled>控えへ</button>
-        <button type="button" id="rebuild">土地を組む</button>
       </span>
     </div>
     <div id="shop" class="cards"></div>
+  </section>
+  <section class="panel fusion-panel" aria-labelledby="merge-heading">
+    <div class="panel-head"><span id="merge-heading">同名合成</span><span class="hint">同名・同★の3枚をまとめて、次の★へ育てます。</span></div>
+    <div id="merge-options"></div>
+  </section>
+  <section class="panel fusion-panel" aria-labelledby="fusion-heading">
+    <div class="panel-head"><span id="fusion-heading">融合</span><span class="hint">同じ★の2体を組み合わせます。完成した巣も同じ★です。</span></div>
+    <div id="fusion-options"></div>
   </section>
   <div id="battle" class="battle" hidden>
     <canvas id="arena" width="1440" height="580"></canvas>
@@ -70,9 +90,19 @@
       <button type="button" id="skip">スキップ</button>
     </div>
   </div>
-  <div id="rebuild-bar" class="rebuild-bar" hidden><span id="rebuild-msg"></span><span><button type="button" id="rebuild-commit" class="primary">確定</button><button type="button" id="rebuild-cancel">キャンセル</button></span></div>
   <div id="market" class="modal" hidden></div>
+  <div id="drag-preview" class="drag-preview" aria-hidden="true" hidden></div>
   <div id="codex-modal" class="modal" hidden></div>
-</div>
+  <div id="replay-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="replay-title" hidden>
+    <form id="replay-form" class="box">
+      <h3 id="replay-title">共有コードで再生</h3>
+      <label for="replay-code">共有コードまたは共有リンク</label>
+      <input id="replay-code" type="text" autocomplete="off" required>
+      <p id="replay-error" role="alert"></p>
+      <button type="submit" class="primary">再生する</button>
+      <button id="replay-cancel" type="button">閉じる</button>
+    </form>
+  </div>
+</div>
 </body>
 </html>
